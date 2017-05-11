@@ -28,11 +28,7 @@ namespace tictacGame
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(isFinishedGame == true)
-            {
-                unblockBtnStartGame();
-                return;
-            };
+            
             for (int i = 0; i < btns.Length; i++) {
                 if (((Button)sender) == btns[i]) {
                     if (g.getStatusCell(i) == typeCell.empty)
@@ -69,6 +65,11 @@ namespace tictacGame
                     chekWin();
                 }
                 
+            }
+            if (isFinishedGame == true)
+            {
+                unblockBtnStartGame();
+                return;
             }
         }
         /// <summary>
