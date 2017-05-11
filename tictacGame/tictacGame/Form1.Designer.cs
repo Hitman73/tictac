@@ -170,7 +170,6 @@
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button1.Enabled = false;
-            this.button1.Image = global::tictacGame.Properties.Resources.cross;
             this.button1.Location = new System.Drawing.Point(4, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(114, 103);
