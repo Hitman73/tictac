@@ -9,22 +9,27 @@ namespace tictacGame
 {    
     class Game
     {
-        int countStep;   //количество ходов
         private Filed f;
         public Game(int size) {
             f = new Filed(size);
-            countStep = size * size;
         }
-        /// <summary>
-        /// Совершить ход
-        /// </summary>
-        public void nextStep() { countStep--; }
         /// <summary>
         /// Проверка на разрешение хода
         /// </summary>
         /// <returns></returns>
         public bool isNextStep() {
-            return (countStep > 0) ? true : false;
+            for (int i = 0; i < f.size; i++)
+            {
+                for (int j = 0; j < f.size; j++)
+                {
+                    if (getStatusCell(i, j) == typeCell.empty)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+            return false;
         }
         /// <summary>
         /// Проверка на победу
@@ -97,7 +102,6 @@ namespace tictacGame
         /// <returns></returns>
         public bool stepComp(typeCell type, ref int column, ref int row) {
             bool isFind = false;        
-            nextStep();
             if ((isFind = getCellToStepInRow(ref column, ref row)) == true) 
                 setStatusCell(column, row, type);
             return isFind;

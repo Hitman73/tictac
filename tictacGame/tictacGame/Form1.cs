@@ -12,50 +12,38 @@ namespace tictacGame
 {
     public partial class FormGame : Form
     {
-        Button[] btns;
         Game g;
-         int hod;
+        int hod;
         bool isFinishedGame;
         public FormGame()
         {
             InitializeComponent();
-            btns = new Button[] { button1, button2, button3,
-                button4, button5, button6,
-                button7, button8, button9};
             isFinishedGame = false;
             hod = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            //for (int i = 0; i < btns.Length; i++)
+
             {
-                //if (((Button)sender) == btns[i]) 
                 int row = tableLayoutPanel1.GetRow(((Button)sender));
                 int column = tableLayoutPanel1.GetColumn(((Button)sender));
                 int i = row * 3 + column;
+                if (g.getStatusCell(column, row) == typeCell.empty)
                 {
-                    if (g.getStatusCell(column, row) == typeCell.empty)
+                    if (hod == 0)
                     {
-                        g.nextStep();
-                        if (hod == 0)
-                        {
-                            setImageToButton(column, row, typeCell.cross);
-                        }
-                        else
-                        {
-                            setImageToButton(column, row, typeCell.zero);
-                        }
-                        g.setStatusCell(column, row, (hod == 0 ? typeCell.cross : typeCell.zero));
-                        hod = (hod + 1) & 1;
-                        chekWin();
-                        //break;
+                        setImageToButton(column, row, typeCell.cross);
                     }
-                    //else { return; }
+                    else
+                    {
+                        setImageToButton(column, row, typeCell.zero);
+                    }
+                    g.setStatusCell(column, row, (hod == 0 ? typeCell.cross : typeCell.zero));
+                    hod = (hod + 1) & 1;
+                    chekWin();
                 }
             }
-
             if (isFinishedGame == true)
             {
                 unblockBtnStartGame();
@@ -85,9 +73,14 @@ namespace tictacGame
         /// <param name="type"></param>
         void setImageToButton(int column, int row, typeCell type) {
             Button btn;
-            btn = (Button)tableLayoutPanel1.GetControlFromPosition(column, row);
-            btn.Image = (type == typeCell.zero) ? Properties.Resources.zero : Properties.Resources.cross1;
+            try
+            {
+                btn = (Button)tableLayoutPanel1.GetControlFromPosition(column, row);
+                btn.Image = (type == typeCell.zero) ? Properties.Resources.zero : Properties.Resources.cross1;
+            }
+            catch (System.NullReferenceException) { }
             pbNextStep.Image = (type == typeCell.zero) ? Properties.Resources.cross1 : Properties.Resources.zero;
+            
         }/// <summary>
         /// Проверка на победу
         /// </summary>

@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace tictacGame
 {
-    enum typeCell {empty, cross, zero };
+    /// <summary>
+    /// Тип ячейки
+    /// </summary>
+    enum typeCell {empty,   // ячейка пустая
+                    cross,  // ячейка с крестиком 
+                    zero    // ячейка с ноликом
+                    };
     class Filed
     {
         private typeCell[,] map;
         public int size { get; private set; }
         public Filed(int _size) {
-            size = _size;
+            size = (_size < 2) ? 2 : _size;
             map = new typeCell[size, size];
         }
         /// <summary>
@@ -34,7 +40,11 @@ namespace tictacGame
         /// <param name="row">номер строки</param>
         /// <returns></returns>
         public typeCell getStatusCell(int column, int row) {
-            return map[row, column];
+            try
+            {
+                return map[row, column];
+            }
+            catch (System.IndexOutOfRangeException) { return typeCell.empty; }
         }
 
         /// <summary>
@@ -45,7 +55,9 @@ namespace tictacGame
         /// <param name="status">тип</param>
         public void setStatusCell(int column, int row, typeCell status)
         {
+            try { 
                 map[row, column] = status;
+             } catch (System.IndexOutOfRangeException) {}
         }
 
         /// <summary>
@@ -56,11 +68,10 @@ namespace tictacGame
         bool isWinDiagonal(typeCell type) {
             for (int i = 0; i <size; i++)
             {
-                    if (map[i, i] == type)
-                    {
-
-                    }
-                    else { return false; }
+                if (map[i, i] == type)
+                {
+                }
+                else { return false; }
             }
 
             return true;
@@ -74,11 +85,10 @@ namespace tictacGame
         {
             for (int i = 0; i < size; i++)
             {
-                    if (map[i, size-i-1] == type)
-                    {
-
-                    }
-                    else { return false; }
+                if (map[i, size-i-1] == type)
+                {
+                }
+                else { return false; }
             }
 
             return true;
@@ -92,12 +102,14 @@ namespace tictacGame
         private bool checkRow(typeCell type, int row) {
             for (int i = 0; i < size; i++)
             {
-                if (map[row, i] == type)
-                {
-
+                try { 
+                    if (map[row, i] == type)
+                    {
+                    }
+                    else { return false; }
                 }
-                else { return false; }
-            }
+                catch (System.IndexOutOfRangeException) { return false; }
+        }
             return true;
         }
 
@@ -128,11 +140,14 @@ namespace tictacGame
         {
             for (int i = 0; i < size; i++)
             {
-                if (map[i, column] == type)
+                try
                 {
-
+                    if (map[i, column] == type)
+                    {
+                    }
+                    else { return false; }
                 }
-                else { return false; }
+                catch (System.IndexOutOfRangeException) { return false; }               
             }
             return true;
         }
