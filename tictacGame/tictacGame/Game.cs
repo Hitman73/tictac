@@ -48,37 +48,44 @@ namespace tictacGame
         /// </summary>
         /// <param name="numCell">номер  ячейки</param>
         /// <returns></returns>
-        public typeCell getStatusCell(int numCell)
+        public typeCell getStatusCell(int column, int row)
         {
-            return f.getStatusCell(numCell);
+            return f.getStatusCell(column, row);
         }
         /// <summary>
         /// Установить тип ячейки
         /// </summary>
         /// <param name="numCell">номер ячейки</param>
         /// <param name="status">тип</param>
-        public void setStatusCell(int numCell, typeCell status)
+        public void setStatusCell(int column, int row, typeCell status)
         {
-            f.setStatusCell(numCell, status);
+            f.setStatusCell(column, row, status);
         }
 
         /// <summary>
         /// Начать новую игру
         /// </summary>
-        public void newGame() { f.emptyFiled(); }
+        public void newGame() { f.clearFiled(); }
 
         /// <summary>
-        /// Возвращаем номер не занятой ячейки
+        /// Поиск первой не занятой ячейки
         /// </summary>
+        /// <param name="coluumn">столбец</param>
+        /// <param name="row">строка</param>
         /// <returns></returns>
-        int getCellToStepInRow() {
-            int numCell = -1;
-            for (int i = 0; i < f.getMapLengtch(); i++)
+        bool getCellToStepInRow(ref int column, ref int row) {
+            bool numCell = false;
+            for (int i = 0; i < f.size; i++)
             {
-                if (getStatusCell(i) == typeCell.empty)
+                for (int j = 0; j < f.size; j++)
                 {
-                    numCell = i;
-                    break;           
+                    if (getStatusCell(i,j) == typeCell.empty)
+                    {
+                        row = i;
+                        column = j;
+                        numCell = true;
+                        break;
+                    }
                 }
             }
             return numCell;
@@ -88,12 +95,12 @@ namespace tictacGame
         /// </summary>
         /// <param name="type">тип ячейки</param>
         /// <returns></returns>
-        public int stepComp(typeCell type) {
-            int val;            
+        public bool stepComp(typeCell type, ref int column, ref int row) {
+            bool isFind = false;        
             nextStep();
-            val = getCellToStepInRow();
-            setStatusCell(val, type);
-            return val;
+            if ((isFind = getCellToStepInRow(ref column, ref row)) == true) 
+                setStatusCell(column, row, type);
+            return isFind;
         }
     }
 }

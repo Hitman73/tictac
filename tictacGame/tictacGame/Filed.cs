@@ -9,46 +9,43 @@ namespace tictacGame
     enum typeCell {empty, cross, zero };
     class Filed
     {
-        private typeCell[] map;
+        private typeCell[,] map;
         public int size { get; private set; }
         public Filed(int _size) {
             size = _size;
-            map = new typeCell[size * size];
-        }
-        /// <summary>
-        /// Возвращаем количество ячеек в поле
-        /// </summary>
-        /// <returns></returns>
-        public int getMapLengtch() {
-            return map.Length;
+            map = new typeCell[size, size];
         }
         /// <summary>
         /// Очистка поля
         /// </summary>
-        public void emptyFiled()
+        public void clearFiled()
         {
-            for (int i = 0; i < map.Length; i++) {
-                    map[i] = typeCell.empty;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++)
+                {
+                    map[i,j] = typeCell.empty;
+                }
             }
         }
         /// <summary>
         /// Возвращаем тип ячейки
         /// </summary>
-        /// <param name="numCell">номер ячейки</param>
+        /// <param name="column">номер колонки</param>
+        /// <param name="row">номер строки</param>
         /// <returns></returns>
-        public typeCell getStatusCell(int numCell) {
-            return map[numCell];
+        public typeCell getStatusCell(int column, int row) {
+            return map[row, column];
         }
 
         /// <summary>
         /// Установить тип ячейки
         /// </summary>
-        /// <param name="numCell">номер ячейки</param>
+        /// <param name="column">номер колонки</param>
+        /// <param name="row">номер строки</param>
         /// <param name="status">тип</param>
-        public void setStatusCell(int numCell, typeCell status)
+        public void setStatusCell(int column, int row, typeCell status)
         {
-            if ((numCell >= 0) && (numCell < map.Length))
-                 map[numCell] = status;
+                map[row, column] = status;
         }
 
         /// <summary>
@@ -57,13 +54,13 @@ namespace tictacGame
         /// <param name="type">тип ячейки</param>
         /// <returns></returns>
         bool isWinDiagonal(typeCell type) {
-            for (int i = 0; i <map.Length; i+=size+1)
+            for (int i = 0; i <size; i++)
             {
-                if (map[i] == type)
-                {
+                    if (map[i, i] == type)
+                    {
 
-                }
-                else { return false; }
+                    }
+                    else { return false; }
             }
 
             return true;
@@ -75,13 +72,13 @@ namespace tictacGame
        /// <returns></returns>
         bool isWinDiagonal_2(typeCell type)
         {
-            for (int i = size-1; i < map.Length-1; i += size - 1)
+            for (int i = 0; i < size; i++)
             {
-                if (map[i] == type)
-                {
+                    if (map[i, size-i-1] == type)
+                    {
 
-                }
-                else { return false; }
+                    }
+                    else { return false; }
             }
 
             return true;
@@ -93,9 +90,9 @@ namespace tictacGame
         /// <param name="row">номер строки</param>
         /// <returns></returns>
         private bool checkRow(typeCell type, int row) {
-            for (int i = size * row; i < (size * row + 3); i++)
+            for (int i = 0; i < size; i++)
             {
-                if (map[i] == type)
+                if (map[row, i] == type)
                 {
 
                 }
@@ -111,7 +108,7 @@ namespace tictacGame
         /// <returns></returns>
         private bool isWinRow(typeCell type)
         {
-            for (int i = 0; i < size; i ++)
+            for (int i = 0; i < size; i++)
             {
                 if (checkRow(type, i))
                 {
@@ -129,9 +126,9 @@ namespace tictacGame
         /// <returns></returns>
         private bool checkColumn(typeCell type, int column)
         {
-            for (int i = column; i < map.Length; i+=3)
+            for (int i = 0; i < size; i++)
             {
-                if (map[i] == type)
+                if (map[i, column] == type)
                 {
 
                 }
