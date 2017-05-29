@@ -10,8 +10,10 @@ namespace tictacGame
     class Game
     {
         private Filed f;
+        public int countStep {get; private set;}
         public Game(int size) {
             f = new Filed(size);
+            countStep = 0;
         }
         /// <summary>
         /// Проверка на разрешение хода
@@ -65,6 +67,7 @@ namespace tictacGame
         public void setStatusCell(int column, int row, typeCell status)
         {
             f.setStatusCell(column, row, status);
+            countStep++;
         }
 
         /// <summary>
@@ -79,21 +82,19 @@ namespace tictacGame
         /// <param name="row">строка</param>
         /// <returns></returns>
         bool getCellToStepInRow(ref int column, ref int row) {
-            bool numCell = false;
             for (int i = 0; i < f.size; i++)
             {
                 for (int j = 0; j < f.size; j++)
                 {
-                    if (getStatusCell(i,j) == typeCell.empty)
+                    if (getStatusCell(j,i) == typeCell.empty)
                     {
                         row = i;
                         column = j;
-                        numCell = true;
-                        break;
+                        return true;
                     }
                 }
             }
-            return numCell;
+            return false;
         }
         /// <summary>
         /// Ход компьтера

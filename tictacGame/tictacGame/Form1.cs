@@ -14,12 +14,15 @@ namespace tictacGame
     {
         Game g;
         int hod;
-        bool isFinishedGame;
+        private string fileName;
+        GameState status;
+
         public FormGame()
         {
             InitializeComponent();
-            isFinishedGame = false;
             hod = 0;
+            fileName = @"c:\stat.json";
+            status = GameState.complete;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -44,13 +47,9 @@ namespace tictacGame
                     chekWin();
                 }
             }
-            if (isFinishedGame == true)
-            {
-                unblockBtnStartGame();
-                return;
-            }
+
             //Ходит компьютер
-            if (rbComp.Checked) {
+            if (rbComp.Checked && (status == GameState.complete)) {
                 bool cell;
                 int col = 0, row = 0;
                 if ((cell = g.stepComp(typeCell.zero, ref col, ref row)) == true) {
@@ -60,9 +59,12 @@ namespace tictacGame
                 }
                 
             }
-            if (isFinishedGame == true)
+            if (status != GameState.complete)
             {
                 unblockBtnStartGame();
+                List<Statistic> list = MySerilize.readResult(fileName);
+                list.Add(new Statistic(g.countStep, (int)status));
+                MySerilize.saveResult(list, fileName);
                 return;
             }
         }
@@ -91,19 +93,20 @@ namespace tictacGame
                 blockButtons();
                 if (winer == typeCell.cross)
                 {
+                    status = GameState.winerX;
                     MessageBox.Show("Победили крестики");
                 }
                 else if (winer == typeCell.zero)
                 {
+                    status = GameState.winerO;
                     MessageBox.Show("Победили нолики");
                 }
-                isFinishedGame = true;
             }
             else if (g.isNextStep() == false)
             {
+                status = GameState.nichay;
                 MessageBox.Show("Ничья");
                 blockButtons();
-                isFinishedGame = true;
             }
         }
         /// <summary>
@@ -120,7 +123,7 @@ namespace tictacGame
                 }
             }
             pbNextStep.Image = Properties.Resources.cross1;
-            isFinishedGame = false;
+            status = GameState.complete;
             hod = 0;
         }
        /// <summary>
@@ -160,6 +163,12 @@ namespace tictacGame
             btnStartGame.Enabled = true;
             reset.Enabled = false;
         }
-        
+
+        private void btnStatistic_Click(object sender, EventArgs e)
+        {
+            FormStatistic fs = new FormStatistic();
+            fs.dataGridView1.DataSource = MySerilize.readResult(fileName);
+            fs.ShowDialog();
+        }
     }
 }

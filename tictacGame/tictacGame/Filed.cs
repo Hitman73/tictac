@@ -13,6 +13,13 @@ namespace tictacGame
                     cross,  // ячейка с крестиком 
                     zero    // ячейка с ноликом
                     };
+
+    enum GameState {
+        complete, // идет игра
+        nichay, //ничья
+        winerX, //победили крестики
+        winerO  //победили нолики
+    };
     class Filed
     {
         private typeCell[,] map;

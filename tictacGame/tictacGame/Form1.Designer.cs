@@ -47,6 +47,7 @@
             this.rbComp = new System.Windows.Forms.RadioButton();
             this.reset = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnStatistic = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbNextStep)).BeginInit();
             this.panel1.SuspendLayout();
@@ -250,6 +251,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnStatistic);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.reset);
             this.groupBox1.Controls.Add(this.pbNextStep);
@@ -257,9 +259,19 @@
             this.groupBox1.Controls.Add(this.panel1);
             this.groupBox1.Location = new System.Drawing.Point(405, 16);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(221, 258);
+            this.groupBox1.Size = new System.Drawing.Size(221, 278);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
+            // 
+            // btnStatistic
+            // 
+            this.btnStatistic.Location = new System.Drawing.Point(10, 249);
+            this.btnStatistic.Name = "btnStatistic";
+            this.btnStatistic.Size = new System.Drawing.Size(195, 23);
+            this.btnStatistic.TabIndex = 8;
+            this.btnStatistic.Text = "Показать статистику";
+            this.btnStatistic.UseVisualStyleBackColor = true;
+            this.btnStatistic.Click += new System.EventHandler(this.btnStatistic_Click);
             // 
             // FormGame
             // 
@@ -302,6 +314,7 @@
         private System.Windows.Forms.RadioButton rbComp;
         private System.Windows.Forms.Button reset;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnStatistic;
     }
 }
 
