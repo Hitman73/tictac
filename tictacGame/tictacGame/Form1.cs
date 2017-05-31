@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,9 +28,8 @@ namespace tictacGame
             status = GameState.complete;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-
             {
                 int row = tableLayoutPanel1.GetRow(((Button)sender));
                 int column = tableLayoutPanel1.GetColumn(((Button)sender));
@@ -63,25 +65,78 @@ namespace tictacGame
             {
                 unblockBtnStartGame();
                 List<Statistic> list = MySerilize.readResult(fileName);
-                list.Add(new Statistic(g.countStep, (int)status));
-                MySerilize.saveResult(list, fileName);
-                return;
+                list.Add(new Statistic(g.countStep, (int)status, (DateTime)DateTime.Now));
+                try
+                {
+                    await PostRequestAsync(list.Last());
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+
+                try
+                {
+                    MySerilize.saveResult(list, fileName);
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+                //return;
             }
         }
+
+        /// <summary>
+        /// отправка данных в запросе
+        /// </summary>
+        /// <param name="list">данные</param>
+        /// <returns></returns>
+        private static async Task PostRequestAsync(Statistic list)
+        {
+            WebRequest request = WebRequest.Create("http://localhost:21944/Home/SaveStatistic");
+            request.Method = "POST"; // для отправки используется метод Post
+
+            // данные для отправки
+            //string data = JsonConvert.SerializeObject(list);
+            string data = "countStep="+list.countStep+"&winer="+list.winer+"&date="+list.date;
+            // преобразуем данные в массив байтов
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(data);
+            // устанавливаем тип содержимого - параметр ContentType
+            request.ContentType = "application/x-www-form-urlencoded";
+            // Устанавливаем заголовок Content-Length запроса - свойство ContentLength
+            request.ContentLength = byteArray.Length;
+
+            //записываем данные в поток запроса
+            using (Stream dataStream = request.GetRequestStream())
+            {
+                dataStream.Write(byteArray, 0, byteArray.Length);
+            }
+
+            try
+            {
+                WebResponse response = await request.GetResponseAsync();
+                using (Stream stream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        Console.WriteLine(reader.ReadToEnd());
+                    }
+                }
+                response.Close();
+            }
+            catch (IOException) { MessageBox.Show("не удалось отправить данные на сервер", "Ошибка"); }            
+        }
+
+
         /// <summary>
         /// Установка картинки для кнопки(ячейки)
         /// </summary>
         /// <param name="cell"></param>
         /// <param name="type"></param>
         void setImageToButton(int column, int row, typeCell type) {
-            Button btn;
-            try
-            {
-                btn = (Button)tableLayoutPanel1.GetControlFromPosition(column, row);
-                btn.Image = (type == typeCell.zero) ? Properties.Resources.zero : Properties.Resources.cross1;
-            }
-            catch (System.NullReferenceException) { }
-            pbNextStep.Image = (type == typeCell.zero) ? Properties.Resources.cross1 : Properties.Resources.zero;
+        Button btn;
+        try
+        {
+            btn = (Button)tableLayoutPanel1.GetControlFromPosition(column, row);
+            btn.Image = (type == typeCell.zero) ? Properties.Resources.zero : Properties.Resources.cross1;
+        }
+        catch (System.NullReferenceException) { }
+        pbNextStep.Image = (type == typeCell.zero) ? Properties.Resources.cross1 : Properties.Resources.zero;
             
         }/// <summary>
         /// Проверка на победу
@@ -166,8 +221,16 @@ namespace tictacGame
 
         private void btnStatistic_Click(object sender, EventArgs e)
         {
+            List<Statistic> list = MySerilize.readResult(fileName);
             FormStatistic fs = new FormStatistic();
-            fs.dataGridView1.DataSource = MySerilize.readResult(fileName);
+
+            float proc = 0;
+            if (list.Count > 0)
+            {
+                proc = (from i in list where i.winer == 2 select i).Count()* 100.0f / (float)list.Count;
+            }
+            fs.dataGridView1.DataSource = list;
+            fs.lProcent.Text = proc.ToString();
             fs.ShowDialog();
         }
     }

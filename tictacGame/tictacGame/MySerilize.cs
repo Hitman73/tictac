@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace tictacGame
 {
-    static class MySerilize
+    public static class MySerilize
     {
         static public void saveResult(List<Statistic> list, string fileName) {
             /*XmlSerializer ser = new XmlSerializer(typeof(List<Statistic>));
@@ -19,9 +19,9 @@ namespace tictacGame
             }*/
 
             string json = JsonConvert.SerializeObject(list);
-            using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Default))
+            using (FileStream fs = new FileStream(fileName, FileMode.Create))
             {
-                sw.Write(json);
+                fs.Write(System.Text.Encoding.Default.GetBytes(json), 0, json.Length);
             }
         }
 
@@ -40,7 +40,7 @@ namespace tictacGame
                     list = JsonConvert.DeserializeObject<List<Statistic>>(sr.ReadToEnd());
                 }
             }
-            catch (IOException) { }
+            catch  { }
             return list;
         }
     }
