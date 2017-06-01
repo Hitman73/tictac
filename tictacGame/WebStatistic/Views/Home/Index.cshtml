@@ -15,12 +15,17 @@
             foreach (var b in ViewBag.List)
                 {
                 <tr>
-                    <td><p>@b.winer</p></td>
+                    @switch ((int)@b.winer)
+                    {
+                        case 1: <td><p>Ничья</p></td>break;
+                        case 2: <td><p>Крестики</p></td>break;
+                        case 3: <td><p>Нолики</p></td>break;
+                    }
                     <td><p>@b.countStep</p></td>
                     <td><p>@b.date</p></td>
                 </tr>
             }
-        }
+                    }
     </table>
 
     <p> % побед пользователя (Х) - <b>@ViewBag.Proc</b></p>
