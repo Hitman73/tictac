@@ -5,27 +5,28 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using tictacGame;
+using WebStatistic.Models;
 
 namespace WebStatistic.Controllers
 {
     public class HomeController : Controller
     {
-        private string fileName = @"c:\webstat.json";
+        // создаем контекст данных
+        StatContext db = new StatContext();
         public ActionResult Index()
         {
-            //выведем статистику из файла\
-            List<Statistic> list = null;
-            try {
-                list = MySerilize.readResult(fileName);
-            }
-            catch { }
-
-            ViewBag.Proc = calcProcent(list);
-            ViewBag.List = list;
+            // получаем из бд все объекты
+            IEnumerable<Statistika> statistika = db.Stats;
+            // передаем все объекты в динамическое свойство Books в ViewBag
+            ViewBag.List = statistika;
+            // расчитываем процент побед
+            List<Statistika> list = db.Stats.Select(i => i).ToList();
+            ViewBag.Proc = calcProcent(list);    
+            // возвращаем представление        
             return View();
         }
 
-        private float calcProcent(List<Statistic> list) {
+        private float calcProcent(List<Statistika> list) {
             float proc = 0;
             if (list.Count > 0)
             {
@@ -34,18 +35,17 @@ namespace WebStatistic.Controllers
             return proc;
         }
         [HttpPost]
-        public string SaveStatistic(int countStep, int winer, DateTime date)
+        public string SaveStatistic(Statistic param)
         {
-            //сохраним статистику в файл
-            List<Statistic> list = new List<Statistic>();
-            try
-            {
-                list = MySerilize.readResult(fileName);
-            }
-            catch { }
-            if (list == null) { list = new List<Statistic>(); }
-            list.Add(new Statistic((int)countStep, (int)winer, (DateTime)date));
-            MySerilize.saveResult(list, fileName);
+            Statistika s = new Statistika();
+            s.countStep = param.countStep;
+            s.date = param.date;
+            s.winer = param.winer;
+            s.Id = db.Stats.Count() + 1;
+            // добавляем информацию о статистике в базу данных
+            db.Stats.Add(s);
+            // сохраняем в бд все изменения
+            db.SaveChanges();
             return "Статистика сохранена!";
         }
     }
