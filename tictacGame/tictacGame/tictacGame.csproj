@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>bovo.ico</ApplicationIcon>
+    <ApplicationIcon>Ico\bovo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -102,7 +102,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bovo.ico" />
+    <Content Include="Ico\bovo.ico" />
     <None Include="Resources\cross1.png" />
     <None Include="Resources\cross.png" />
     <None Include="Resources\zero.png" />

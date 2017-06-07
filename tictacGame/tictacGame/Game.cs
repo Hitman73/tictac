@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace tictacGame
 {    
-    class Game
+    public class Game
     {
         private Filed f;
         public int countStep {get; private set;}

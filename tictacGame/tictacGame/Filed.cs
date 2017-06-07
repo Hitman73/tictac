@@ -9,18 +9,18 @@ namespace tictacGame
     /// <summary>
     /// Тип ячейки
     /// </summary>
-    enum typeCell {empty,   // ячейка пустая
+    public enum typeCell {empty,   // ячейка пустая
                     cross,  // ячейка с крестиком 
                     zero    // ячейка с ноликом
                     };
 
-    enum GameState {
+    public enum GameState {
         complete, // идет игра
         nichay, //ничья
         winerX, //победили крестики
         winerO  //победили нолики
     };
-    class Filed
+    public class Filed
     {
         private typeCell[,] map;
         public int size { get; private set; }
